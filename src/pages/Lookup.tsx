@@ -1,7 +1,7 @@
 import PageBreadcrumb from "../components/common/PageBreadCrumb";
 import PageMeta from "../components/common/PageMeta";
 
-export default function Blank() {
+export default function Lookup() {
   return (
     <div>
       <PageMeta
@@ -16,8 +16,7 @@ export default function Blank() {
           </h3>
 
           <p className="text-sm text-gray-500 dark:text-gray-400 sm:text-base">
-            Start putting content on grids or panels, you can also use different
-            combinations of grids.Please check out the dashboard and other pages
+            hi
           </p>
         </div>
       </div>
