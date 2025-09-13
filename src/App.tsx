@@ -4,6 +4,8 @@ import Homepage from "./pages/Homepage";
 import Lookup from "./pages/Lookup";
 import AppLayout from "./layout/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop";
+import FormElements from "./pages/Forms/FormElements";
+import Buttons from "./pages/UiElements/Buttons";
 
 export default function App() {
   return (
@@ -16,7 +18,14 @@ export default function App() {
             <Route index path="/" element={<Homepage />} />
 
             <Route path="/lookup" element={<Lookup />} />
+
+            {/* <Route path="/trainer" element={<Trainer />} /> */}
           </Route>
+
+          {/* Forms */}
+          <Route path="/form-elements" element={<FormElements />} />
+
+          <Route path="/buttons" element={<Buttons />} />
 
           {/* Fallback Route */}
           <Route path="*" element={<NotFound />} />
