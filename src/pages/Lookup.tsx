@@ -25,6 +25,7 @@ export default function Lookup() {
     { value: "sw", label: "Statewide" },
     { value: "states", label: "States" },
     { value: "nats", label: "Nationals" },
+    { value: "other", label: "Other" },
   ];
 
   const div_ops_local = [
@@ -110,8 +111,8 @@ export default function Lookup() {
 
           <ComponentCard title="Enter test/question details:">
 
-
-              <div className="flex flex-wrap items-center gap-8">
+              {/* the problem is this line below */}
+              <div className="flex flex-wrap items-center justify-center gap-8">
                 <div>
                   <Label>Competition:</Label>
                   <Select
@@ -174,10 +175,8 @@ export default function Lookup() {
               <Button size="md" variant="primary">
                 Submit Query
               </Button>
-        </ComponentCard>
 
-        
-  
+          </ComponentCard>
         </div>
       </div>
     </div>
