@@ -18,6 +18,8 @@ export default function Lookup() {
 
   const [div_ops, setDivOptions] = useState<{ value: string; label: string; }[]>([])
 
+  // const [topic_ops, setTopicOptions] = useState<{ value: string; label: string; }[]>([])
+
   const loc_ops = [
     { value: "reg", label: "Regional" },
     { value: "sw", label: "Statewide" },
@@ -52,6 +54,7 @@ export default function Lookup() {
     { value: "indiv", label: "Individual" },
     { value: "cipher", label: "Ciphering" },
     { value: "bowl", label: "Bowl" },
+    { value: "topics", label: "Topic Tests" },
     { value: "other", label: "Other" },
   ];
 
@@ -107,11 +110,23 @@ export default function Lookup() {
 
           <ComponentCard title="Enter test/question details:">
 
+
               <div className="flex flex-wrap items-center gap-8">
                 <div>
                   <Label>Competition:</Label>
                   <Select
                     options={loc_ops}
+                    placeholder="Select Option"
+                    onChange={handleSelectChange}
+                    className="dark:bg-dark-900"
+                  />
+                </div>
+
+
+                <div>
+                  <Label>Division:</Label>
+                  <Select
+                    options={div_ops}
                     placeholder="Select Option"
                     onChange={handleSelectChange}
                     className="dark:bg-dark-900"
@@ -130,9 +145,9 @@ export default function Lookup() {
                 </div>
 
                 <div>
-                  <Label>Division:</Label>
+                  <Label>Type of Test:</Label>
                   <Select
-                    options={div_ops}
+                    options={type_ops}
                     placeholder="Select Option"
                     onChange={handleSelectChange}
                     className="dark:bg-dark-900"
@@ -140,12 +155,13 @@ export default function Lookup() {
                 </div>
 
                 <div>
-                  <Label>Type of Test:</Label>
+                  <Label>Topic:</Label>
                   <Select
                     options={type_ops}
                     placeholder="Select Option"
                     onChange={handleSelectChange}
                     className="dark:bg-dark-900"
+                    disabled={!(query.loc == "states" || query.loc == "nats")}
                   />
                 </div>
               
