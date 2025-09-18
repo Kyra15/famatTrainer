@@ -11,8 +11,7 @@ rickards and nunn are just stupid, theyre going to be in the stupid category
 if someone selects the stupid category, they should only be allowed the theta alpha mu options
 ok did that
 
-now i all have to do it transfer the data from the react side to the flask side
+now i all have to do it transfer the query data from the react side to the flask side
 then query the dropbox
 then display that pdf
-
 

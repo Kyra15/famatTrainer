@@ -91,9 +91,27 @@ export default function Lookup() {
       }
       return query;
     })
+  };
 
-    
+  const [response, setResponse] = useState(null);
 
+  const handleSubmit = async () => {
+    const message = Object.entries(query)
+      .filter(([_, value]) => value)
+      .map(([key, value]) => `${key}: ${value}`)
+      .join(", ");
+
+
+    const dataToSend = { message }; // Whatever you want to send
+
+    const res = await fetch("http://localhost:3001/api/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(dataToSend),
+    });
+
+    const result = await res.json();
+    setResponse(result);
   };
   
   return (
@@ -111,7 +129,6 @@ export default function Lookup() {
 
           <ComponentCard title="Enter test/question details:">
 
-              {/* the problem is this line below */}
               <div className="flex flex-wrap items-center justify-center gap-8">
                 <div>
                   <Label>Competition:</Label>
@@ -172,9 +189,10 @@ export default function Lookup() {
                 </div>
 
               </div>
-              <Button size="md" variant="primary">
+              <Button size="md" variant="primary" onClick={handleSubmit}>
                 Submit Query
               </Button>
+              {response && <pre>{JSON.stringify(response, null, 2)}</pre>}
 
           </ComponentCard>
         </div>
