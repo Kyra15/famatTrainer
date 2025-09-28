@@ -21,8 +21,6 @@ def connect_to_dropbox():
 dbx = connect_to_dropbox()
 
 def dropbox_list_files(path):
-    """Return a Pandas dataframe of files in a given Dropbox folder path in the Apps directory.
-    """
 
     dbx = connect_to_dropbox()
 
@@ -30,7 +28,6 @@ def dropbox_list_files(path):
         files = dbx.files_list_folder(path).entries
         files_list = []
         for file in files:
-            # if isinstance(file, dropbox.files.FolderMetadata):
             metadata = {
                 'name': file.name,
                 'path_display': file.path_display,

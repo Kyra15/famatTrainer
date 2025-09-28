@@ -10,10 +10,12 @@ import Button from "../components/ui/button/Button";
 export default function Lookup() {
 
   const [query, setQuery] = useState({
-    "loc": "",
-    "div": "",
-    "month": "",
-    "type": "",
+    "loc": "all",
+    "div": "all",
+    "month": "all",
+    "type": "all",
+    "topic": "all",
+    "year": "all"
   });
 
   const [div_ops, setDivOptions] = useState<{ value: string; label: string; }[]>([])
