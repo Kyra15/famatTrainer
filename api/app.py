@@ -51,8 +51,17 @@ def submit_data():
 
 
 def queryDB(data):
-    # if data["loc"] == "sw" or data["loc"] == "reg":
-    #     query = f'/famat//{data["div"]}/{{data["month"]}}-{{data["loc"]}}'
+
+    # need to map the data to the right codes
+    code_dict = {
+                    "geo": "g",
+                    "alg2": "a2",
+                    "precalc": "pc",
+                    "stats": "st",
+                    "calc": "c",
+                }
+    
+    # map the divisions
 
     if data["loc"] == "sw" or data["loc"] == "reg":
         # structure is {year}{div}{location}{month}(S)
@@ -60,10 +69,12 @@ def queryDB(data):
     else:
         # structure is {year}{div}{topic}{location}(S) or (A)
         query = f"{data["year"]}{data["div"]}{data["topic"]}{data["loc"]}(S)".upper()
+
     db_key = connect_to_dropbox()
     # data = dropbox_list_files(db_key, )
-    data = dropbox_list_files(db_key, query)
-    print(data)
+    # data = dropbox_list_files(db_key, "/famat")
+    # print(data)
+    dropbox_search(db_key, "/famat", query)
 
 def connect_to_dropbox():
   
@@ -75,6 +86,25 @@ def connect_to_dropbox():
         print(str(e))
     
     return dbx
+
+
+def dropbox_search(dbx, path, query):
+
+    search_options = dropbox.files.SearchOptions(
+        path=path,
+        max_results=10,
+        file_extensions=[".pdf"]
+    )
+
+    try:
+        results = dbx.files_search_v2(query, options=search_options)
+        for match in results.matches:
+            if isinstance(match.metadata.get_metadata(), dropbox.files.FileMetadata):
+                file_metadata = match.metadata.get_metadata()
+                print(f"Found file: {file_metadata.name} (Path: {file_metadata.path_display})")
+    except Exception as e:
+        print('Error searching Dropbox: ' + str(e))
+
 
 def dropbox_list_files(dbx, path):
 

@@ -61,6 +61,11 @@ export default function Lookup() {
     { value: "other", label: "Other" },
   ];
 
+  // this need to be populated from the dropbox
+  // const topic_ops = [
+  //   { value: "indiv", label: "Individual" },
+  // ]
+
   const handleSelectChange = (value: string) => {
     console.log("Selected value:", value);
 
@@ -90,9 +95,19 @@ export default function Lookup() {
         query["month"] = value
       } else if (type_ops.some(e => e.value == value)) {
         query["type"] = value
-      }
+      } 
       return query;
     })
+  };
+
+  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.currentTarget;
+    console.log("Event val:", value);
+
+    setQuery(prevQuery => ({
+      ...prevQuery,
+      [id]: value,
+    }));
   };
 
   const [response, setResponse] = useState(null);
@@ -104,7 +119,7 @@ export default function Lookup() {
       .join(", ");
 
 
-    const dataToSend = { message }; // Whatever you want to send
+    const dataToSend = { message };
 
     const res = await fetch("http://localhost:3001/api/submit", {
       method: "POST",
@@ -187,7 +202,7 @@ export default function Lookup() {
               
                 <div>
                   <Label htmlFor="input">Year:</Label>
-                  <Input type="text" id="input" />
+                  <Input type="text" id="year" onChange={handleInput}/>
                 </div>
 
               </div>
