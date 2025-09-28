@@ -99,7 +99,7 @@ export default function Lookup() {
 
   const handleSubmit = async () => {
     const message = Object.entries(query)
-      .filter(([_, value]) => value)
+      .filter(([value]) => value)
       .map(([key, value]) => `${key}: ${value}`)
       .join(", ");
 

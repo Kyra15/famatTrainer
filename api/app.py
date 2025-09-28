@@ -19,10 +19,12 @@ def question():
 def submit_data():
     data = request.get_json()
     print("Received from React:", data["message"])
-    data_dict = json.loads("'{" + {data["message"]} + "}'")
-    
-    # response = {"status": "success", "received": data}
-    # need to return pdf of solutions
+
+    # i have never seen this syntax in my life
+    data_dict = {
+        pair.split(': ')[0]: pair.split(': ')[1] 
+        for pair in data["message"].split(', ')
+    }
 
     '''
     {year}{div}{topic}{location}(S) or (A)?? seems they like to switch it up
@@ -32,10 +34,10 @@ def submit_data():
 
     if data_dict["loc"] == "sw" or data_dict["loc"] == "reg":
         # structure is {year}{div}{location}{month}(S)
-        query = f"{data_dict["year"]}{data_dict["div"]}{data_dict["loc"]}{data_dict["month"]}(S)"
+        query = f"{data_dict["year"]}{data_dict["div"]}{data_dict["loc"]}{data_dict["month"]}(S)".upper()
     else:
         # structure is {year}{div}{topic}{location}(S) or (A)
-        query = f"{data_dict["year"]}{data_dict["div"]}{data_dict["topic"]}{data_dict["loc"]}(S)"
+        query = f"{data_dict["year"]}{data_dict["div"]}{data_dict["topic"]}{data_dict["loc"]}(S)".upper()
 
     return jsonify(query)
 
