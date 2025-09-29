@@ -5,7 +5,7 @@ export default function SendDataDemo() {
   const [response, setResponse] = useState(null);
 
   const handleSubmit = async () => {
-    const dataToSend = { message }; // Whatever you want to send
+    const dataToSend = { message };
 
     const res = await fetch("http://localhost:3001/api/submit", {
       method: "POST",

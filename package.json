@@ -29,6 +29,7 @@
     "react-dom": "^19.0.0",
     "react-dropzone": "^14.3.5",
     "react-helmet-async": "^2.0.5",
+    "react-pdf": "^10.1.0",
     "react-router": "^7.1.5",
     "swiper": "^11.2.3",
     "tailwind-merge": "^3.0.1"
@@ -63,6 +64,5 @@
       "react-dom": "^16.8.0 || ^17 || ^18 || ^19"
     }
   },
-
   "proxy": "http://127.0.0.1:5000"
 }

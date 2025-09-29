@@ -4,6 +4,7 @@ from flask_cors import CORS
 import dropbox
 import pandas as pd
 import json
+import base64
 
 DROPBOX_ACCESS_TOKEN = ''
 
@@ -37,17 +38,10 @@ def submit_data():
     or
     {year}{div}{location}{month}(S)
     '''
-
-    # if data_dict["loc"] == "sw" or data_dict["loc"] == "reg":
-    #     # structure is {year}{div}{location}{month}(S)
-    #     query = f"{data_dict["year"]}{data_dict["div"]}{data_dict["loc"]}{data_dict["month"]}(S)".upper()
-    # else:
-    #     # structure is {year}{div}{topic}{location}(S) or (A)
-    #     query = f"{data_dict["year"]}{data_dict["div"]}{data_dict["topic"]}{data_dict["loc"]}(S)".upper()
     
-    queryDB(data_dict)
+    results = queryDB(data_dict)
 
-    return jsonify(data_dict)
+    return jsonify(results)
 
 
 def queryDB(data):
@@ -59,22 +53,41 @@ def queryDB(data):
                     "precalc": "pc",
                     "stats": "st",
                     "calc": "c",
+                    "reg": "r"
                 }
     
     # map the divisions
+    mapped_data = {
+        key: code_dict.get(value, value)
+        for key, value in data.items()
+    }
 
-    if data["loc"] == "sw" or data["loc"] == "reg":
+    print(mapped_data)
+
+
+    if mapped_data["loc"] == "sw" or mapped_data["loc"] == "r":
         # structure is {year}{div}{location}{month}(S)
-        query = f"{data["year"]}{data["div"]}{data["loc"]}{data["month"]}(S)".upper()
+        query = f"{mapped_data["year"]}{mapped_data["div"]}{mapped_data["loc"]}{mapped_data["month"]}".upper()
     else:
         # structure is {year}{div}{topic}{location}(S) or (A)
-        query = f"{data["year"]}{data["div"]}{data["topic"]}{data["loc"]}(S)".upper()
+        query = f"{mapped_data["year"]}{mapped_data["div"]}{mapped_data["topic"]}{mapped_data["loc"]}".upper()
 
     db_key = connect_to_dropbox()
-    # data = dropbox_list_files(db_key, )
-    # data = dropbox_list_files(db_key, "/famat")
-    # print(data)
-    dropbox_search(db_key, "/famat", query)
+    results = find_files(db_key, "/famat", query)
+    docs = {}
+    for f in results:
+        print(f"Found:", f.path_display)
+        if "(T)" not in f.name:
+            # metadata, res = db_key.files_download(f.path_display)
+            # file_bytes = res.content
+            # docs[f.name] = base64.b64encode(file_bytes).decode("utf-8")
+            docs[f.name] = db_key.files_get_temporary_link(f.path_display).link
+    
+    # now, send get a temp link
+    # then send back to react
+
+    return docs
+
 
 def connect_to_dropbox():
   
@@ -87,23 +100,43 @@ def connect_to_dropbox():
     
     return dbx
 
+# this doesnt work i have no clue why maybe due to special characters or sharing issues
+# def dropbox_search(dbx, query):
 
-def dropbox_search(dbx, path, query):
+#     print("Query:", query)
 
-    search_options = dropbox.files.SearchOptions(
-        path=path,
-        max_results=10,
-        file_extensions=[".pdf"]
-    )
+#     search_options = dropbox.files.SearchOptions(
+#         path="/famat/theta/geo/jan-reg",
+#         max_results=10,
+#         file_extensions=[".pdf"],
+#         filename_only=True
+#     )
 
-    try:
-        results = dbx.files_search_v2(query, options=search_options)
-        for match in results.matches:
-            if isinstance(match.metadata.get_metadata(), dropbox.files.FileMetadata):
-                file_metadata = match.metadata.get_metadata()
-                print(f"Found file: {file_metadata.name} (Path: {file_metadata.path_display})")
-    except Exception as e:
-        print('Error searching Dropbox: ' + str(e))
+#     try:
+#         results = dbx.files_search_v2(query, options=search_options)
+#         for match in results.matches:
+#             metadata = match.metadata.get_metadata()
+#             if isinstance(metadata, dropbox.files.FileMetadata):
+#                 print(f"Found file: {metadata.name} (Path: {metadata.path_display})")
+#         print("Ran loop")
+#     except Exception as e:
+#         print('Error searching Dropbox: ' + str(e))
+
+
+def find_files(dbx, folder, query):
+    result = dbx.files_list_folder(folder, recursive=True)
+    matches = []
+
+    while True:
+        for entry in result.entries:
+            if isinstance(entry, dropbox.files.FileMetadata):
+                if query.lower() in entry.name.lower():
+                    matches.append(entry)
+        if result.has_more:
+            result = dbx.files_list_folder_continue(result.cursor)
+        else:
+            break
+    return matches
 
 
 def dropbox_list_files(dbx, path):

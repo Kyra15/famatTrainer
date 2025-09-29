@@ -6,16 +6,33 @@ import Label from "../components/form/Label.tsx";
 import Input from "../components/form/input/InputField";
 import Select from "../components/form/Select.tsx";
 import Button from "../components/ui/button/Button";
+import { Document, Page, pdfjs } from 'react-pdf'
+import type { PDFDocumentProxy } from 'pdfjs-dist';
+
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  'pdfjs-dist/build/pdf.worker.min.mjs',
+  import.meta.url,
+).toString();
+
 
 export default function Lookup() {
 
+  // const [query, setQuery] = useState({
+  //   "loc": "{{all}}",
+  //   "div": "{{all}}",
+  //   "month": "{{all}}",
+  //   "type": "{{all}}",
+  //   "topic": "{{all}}",
+  //   "year": "{{all}}"
+  // });
+
   const [query, setQuery] = useState({
-    "loc": "{{all}}",
-    "div": "{{all}}",
-    "month": "{{all}}",
-    "type": "{{all}}",
+    "loc": "reg",
+    "div": "geo",
+    "month": "jan",
+    "type": "indiv",
     "topic": "{{all}}",
-    "year": "{{all}}"
+    "year": "2018"
   });
 
   const [div_ops, setDivOptions] = useState<{ value: string; label: string; }[]>([])
@@ -110,7 +127,8 @@ export default function Lookup() {
     }));
   };
 
-  const [response, setResponse] = useState(null);
+  type PdfResponse = Record<string, string>;
+  const [response, setResponse] = useState<PdfResponse | null>(null);
 
   const handleSubmit = async () => {
     const message = Object.entries(query)
@@ -127,8 +145,14 @@ export default function Lookup() {
       body: JSON.stringify(dataToSend),
     });
 
-    const result = await res.json();
+    const result: PdfResponse = await res.json();
     setResponse(result);
+  };
+
+  const [numPages, setNumPages] = useState<number>();
+
+  function onDocumentLoadSuccess({ numPages: nextNumPages }: PDFDocumentProxy): void {
+    setNumPages(nextNumPages);
   };
   
   return (
@@ -212,6 +236,22 @@ export default function Lookup() {
               {response && <pre>{JSON.stringify(response, null, 2)}</pre>}
 
           </ComponentCard>
+
+          {/* add react pdf viewer here */}
+          {/* https://github.com/wojtekmaj/react-pdf/blob/main/sample/next-pages/pages/Sample.tsx */}
+          {response && (
+            <div style={{ width: '80%', height: "600px", margin: "auto"}}>
+              <Document file={Object.values(response)[0]} onLoadSuccess={onDocumentLoadSuccess}>
+                {Array.from(new Array(numPages), (_el, index) => (
+                  <Page 
+                    key={`page_${index + 1}`}
+                    pageNumber={index +  1}
+                  />
+                ))}
+              </Document>
+              
+            </div>
+          )}
         </div>
       </div>
     </div>
