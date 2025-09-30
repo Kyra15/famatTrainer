@@ -238,25 +238,29 @@ export default function Lookup() {
 
           </ComponentCard>
           <br></br>
-          <div>
-            {/* add react pdf viewer here */}
-            {/* https://github.com/wojtekmaj/react-pdf/blob/main/sample/next-pages/pages/Sample.tsx */}
-            {response && (
-              <div style={{ width: '100%', height: "600px", margin: "auto", }}>
-                <Document file={Object.values(response)[0]} onLoadSuccess={onDocumentLoadSuccess}>
-                  {Array.from(new Array(numPages), (_el, index) => (
-                    <Page 
-                      key={`page_${index + 1}`}
-                      pageNumber={index +  1}
-                      renderTextLayer={false}
-                      renderAnnotationLayer={false}
-                    />
-                  ))}
-                </Document>
-                
-              </div>
-            )}
-          </div>
+
+          <ComponentCard title={response && Object.keys(response)[0]  || "PDF File"}>
+            <div>
+              {/* add react pdf viewer here */}
+              {/* https://github.com/wojtekmaj/react-pdf/blob/main/sample/next-pages/pages/Sample.tsx */}
+              {response && (
+                <div style={{ width: '100%', height: "600px", margin: "auto", }}>
+                  <Document file={Object.values(response)[0]} onLoadSuccess={onDocumentLoadSuccess}>
+                    {Array.from(new Array(numPages), (_el, index) => (
+                      <Page 
+                        key={`page_${index + 1}`}
+                        pageNumber={index +  1}
+                        renderTextLayer={false}
+                        renderAnnotationLayer={false}
+                      />
+                    ))}
+                  </Document>
+                  
+                </div>
+              )}
+            </div>
+          </ComponentCard>
+          
           
         </div>
       </div>

@@ -1,47 +1,33 @@
 import dropbox
-import pandas as pd
-import json
+from dropbox import DropboxOAuth2FlowNoRedirect
+import os
+from dotenv import load_dotenv
 
-DROPBOX_ACCESS_TOKEN = ''
+load_dotenv()
 
-with open("api/dropbox_token.json", "r") as f:
-    DROPBOX_ACCESS_TOKEN = json.load(f)
+APP_KEY = os.getenv("APP_KEY")
+APP_SECRET = os.getenv("APP_SECRET")
 
-def connect_to_dropbox():
-  
-    try:
-        dbx = dropbox.Dropbox(DROPBOX_ACCESS_TOKEN)
-        print('Connected to Dropbox successfully')
-    
-    except Exception as e:
-        print(str(e))
-    
-    return dbx
+def gen_refresh_token():
+    auth_flow = DropboxOAuth2FlowNoRedirect(
+        APP_KEY,
+        APP_SECRET,
+        token_access_type='offline',
+        use_pkce=True
+    )
 
-dbx = connect_to_dropbox()
+    authorize_url = auth_flow.start()
+    print("1. Go to:", authorize_url)
+    print("2. Click 'Allow'.")
+    print("3. Copy the authorization code.")
 
-def dropbox_list_files(path):
+    auth_code = input("Enter the authorization code here: ").strip()
+    oauth_result = auth_flow.finish(auth_code)
 
-    dbx = connect_to_dropbox()
+    print("Access token:", oauth_result.access_token)
+    print("Refresh token:", oauth_result.refresh_token)
+    print("Expires at:", oauth_result.expires_at)
 
-    try:
-        files = dbx.files_list_folder(path).entries
-        files_list = []
-        for file in files:
-            metadata = {
-                'name': file.name,
-                'path_display': file.path_display,
-                'type': 'folder' if isinstance(file, dropbox.files.FolderMetadata) else 'file',
-            }
+    return oauth_result.refresh_token
 
-            files_list.append(metadata)
-
-        df = pd.DataFrame.from_records(files_list)
-        return df
-    except Exception as e:
-        print('Error getting list of folders from Dropbox: ' + str(e))
-      
-
-data = dropbox_list_files('/theta')
-
-print(data)
+gen_refresh_token()

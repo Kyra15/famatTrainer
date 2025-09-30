@@ -4,12 +4,17 @@ from flask_cors import CORS
 import dropbox
 import pandas as pd
 import json
-import base64
+from dropbox import DropboxOAuth2FlowNoRedirect
+import os
+from dotenv import load_dotenv
+import requests
 
-DROPBOX_ACCESS_TOKEN = ''
 
-with open("api/dropbox_token.json", "r") as f:
-    DROPBOX_ACCESS_TOKEN = json.load(f)
+load_dotenv()
+
+REFRESH_TOKEN = os.getenv("REFRESH_TOKEN")
+APP_KEY = os.getenv("APP_KEY")
+APP_SECRET = os.getenv("APP_SECRET")
 
 app = Flask(__name__)
 CORS(app)
@@ -73,6 +78,7 @@ def queryDB(data):
         query = f"{mapped_data["year"]}{mapped_data["div"]}{mapped_data["topic"]}{mapped_data["loc"]}".upper()
 
     db_key = connect_to_dropbox()
+    
     results = find_files(db_key, "/famat", query)
     docs = {}
     for f in results:
@@ -92,11 +98,11 @@ def queryDB(data):
 def connect_to_dropbox():
   
     try:
-        dbx = dropbox.Dropbox(DROPBOX_ACCESS_TOKEN)
+        dbx = dropbox.Dropbox(app_key=APP_KEY, oauth2_refresh_token=REFRESH_TOKEN)
         print('Connected to Dropbox successfully')
     
     except Exception as e:
-        print(str(e))
+        print(f"Error getting db key: {str(e)}")
     
     return dbx
 
