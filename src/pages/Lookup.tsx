@@ -18,23 +18,23 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 
 export default function Lookup() {
 
-  // const [query, setQuery] = useState({
-  //   "loc": "{{all}}",
-  //   "div": "{{all}}",
-  //   "month": "{{all}}",
-  //   "type": "{{all}}",
-  //   "topic": "{{all}}",
-  //   "year": "{{all}}"
-  // });
-
   const [query, setQuery] = useState({
-    "loc": "reg",
-    "div": "geo",
-    "month": "jan",
-    "type": "indiv",
+    "loc": "{{all}}",
+    "div": "{{all}}",
+    "month": "{{all}}",
+    "type": "{{all}}",
     "topic": "{{all}}",
-    "year": "2018"
+    "year": "{{all}}"
   });
+
+  // const [query, setQuery] = useState({
+  //   "loc": "reg",
+  //   "div": "geo",
+  //   "month": "jan",
+  //   "type": "indiv",
+  //   "topic": "{{all}}",
+  //   "year": "2018"
+  // });
 
   const [div_ops, setDivOptions] = useState<{ value: string; label: string; }[]>([])
 
@@ -240,11 +240,10 @@ export default function Lookup() {
           <br></br>
 
           <ComponentCard title={response && Object.keys(response)[0]  || "PDF File"}>
-            <div>
               {/* add react pdf viewer here */}
               {/* https://github.com/wojtekmaj/react-pdf/blob/main/sample/next-pages/pages/Sample.tsx */}
               {response && (
-                <div style={{ width: '100%', height: "600px", margin: "auto", }}>
+                <div style={{margin: "auto"}}>
                   <Document file={Object.values(response)[0]} onLoadSuccess={onDocumentLoadSuccess}>
                     {Array.from(new Array(numPages), (_el, index) => (
                       <Page 
@@ -252,13 +251,13 @@ export default function Lookup() {
                         pageNumber={index +  1}
                         renderTextLayer={false}
                         renderAnnotationLayer={false}
+                        scale={0.9}
                       />
                     ))}
                   </Document>
                   
                 </div>
               )}
-            </div>
           </ComponentCard>
           
           
