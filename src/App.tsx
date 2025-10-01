@@ -4,7 +4,7 @@ import Homepage from "./pages/Homepage";
 import Lookup from "./pages/Lookup";
 import AppLayout from "./layout/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop";
-import FormElements from "./pages/Forms/FormElements";
+// import FormElements from "./pages/Forms/FormElements";
 import Buttons from "./pages/UiElements/Buttons";
 
 export default function App() {
@@ -23,7 +23,7 @@ export default function App() {
           </Route>
 
           {/* Forms */}
-          <Route path="/form-elements" element={<FormElements />} />
+          {/* <Route path="/form-elements" element={<FormElements />} /> */}
 
           <Route path="/buttons" element={<Buttons />} />
 
