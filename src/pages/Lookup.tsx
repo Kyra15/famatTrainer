@@ -141,7 +141,7 @@ export default function Lookup() {
 
     const dataToSend = { message };
 
-    const res = await fetch("http://localhost:3001/api/submit", {
+    const res = await fetch("http://0.0.0.0:3001/api/submit", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(dataToSend),
