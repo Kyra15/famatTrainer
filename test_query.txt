@@ -15,3 +15,9 @@ now i all have to do it transfer the query data from the react side to the flask
 then query the dropbox
 then display that pdf
 
+this is my fake readme:
+to do:
+- add some buttons so u can look at the other tests the thingy found
+- add a way to see the corresponding test for the solutions
+- need to fix topics search
+

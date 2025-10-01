@@ -24,7 +24,8 @@ export default function Lookup() {
     "month": "{{all}}",
     "type": "{{all}}",
     "topic": "{{all}}",
-    "year": "{{all}}"
+    "year": "{{all}}",
+    "custom": "{{all}}"
   });
 
   // const [query, setQuery] = useState({
@@ -126,6 +127,7 @@ export default function Lookup() {
       ...prevQuery,
       [id]: value,
     }));
+    
   };
 
   type PdfResponse = Record<string, string>;
@@ -136,7 +138,6 @@ export default function Lookup() {
       .filter(([value]) => value)
       .map(([key, value]) => `${key}: ${value}`)
       .join(", ");
-
 
     const dataToSend = { message };
 
@@ -164,86 +165,116 @@ export default function Lookup() {
       />
       <PageBreadcrumb pageTitle="Lookup" />
       <div className="min-h-screen rounded-2xl border border-gray-200 bg-white px-5 py-7 dark:border-gray-800 dark:bg-white/[0.03] xl:px-10 xl:py-12">
-        <div className="mx-auto w-full max-w-[630px] text-center">
+        <div className="mx-auto w-full text-center">
           <h3 className="mb-4 font-semibold text-gray-800 text-theme-xl dark:text-white/90 sm:text-2xl">
             Database Lookup
           </h3>
+          <h5 className="mb-4 font-semibold text-gray-800 text-theme-l dark:text-gray-400/90 sm:text-xl">
+            contains tests from about 2009 - 2023
+          </h5>
 
-          <ComponentCard title="Enter test/question details:">
+          {/* <h5 className="mb-4 font-regular text-gray-800 text-theme-s dark:text-gray-400/90">
+              if you still can't find the test you're looking for, it's bc the test names can be a little goofy sometimes! just check the database instead :)
+          </h5> */}
 
-              <div className="flex flex-wrap items-center justify-center gap-8">
-                <div>
-                  <Label>Competition:</Label>
-                  <Select
-                    options={loc_ops}
-                    placeholder="Select Option"
-                    onChange={handleSelectChange}
-                    className="dark:bg-dark-900"
-                  />
-                </div>
+          <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+            <div className="space-y-6">
+
+              <ComponentCard title="Enter test/question details:">
+
+                  <div className="flex flex-wrap items-center justify-center gap-8">
+                    <div>
+                      <Label>Competition:</Label>
+                      <Select
+                        options={loc_ops}
+                        placeholder="Select Option"
+                        onChange={handleSelectChange}
+                        className="dark:bg-dark-900"
+                      />
+                    </div>
 
 
-                <div>
-                  <Label>Division:</Label>
-                  <Select
-                    options={div_ops}
-                    placeholder="Select Option"
-                    onChange={handleSelectChange}
-                    className="dark:bg-dark-900"
-                  />
-                </div>
+                    <div>
+                      <Label>Division:</Label>
+                      <Select
+                        options={div_ops}
+                        placeholder="Select Option"
+                        onChange={handleSelectChange}
+                        className="dark:bg-dark-900"
+                      />
+                    </div>
 
-                <div>
-                  <Label>Month:</Label>
-                  <Select
-                    options={month_ops}
-                    placeholder="Select Option"
-                    onChange={handleSelectChange}
-                    className="dark:bg-dark-900"
-                    disabled={!(query.loc == "reg" || query.loc == "sw")}
-                  />
-                </div>
+                    <div>
+                      <Label>Month:</Label>
+                      <Select
+                        options={month_ops}
+                        placeholder="Select Option"
+                        onChange={handleSelectChange}
+                        className="dark:bg-dark-900"
+                        disabled={!(query.loc == "reg" || query.loc == "sw")}
+                      />
+                    </div>
 
-                <div>
-                  <Label>Type of Test:</Label>
-                  <Select
-                    options={type_ops}
-                    placeholder="Select Option"
-                    onChange={handleSelectChange}
-                    className="dark:bg-dark-900"
-                  />
-                </div>
+                    <div>
+                      <Label>Type of Test:</Label>
+                      <Select
+                        options={type_ops}
+                        placeholder="Select Option"
+                        onChange={handleSelectChange}
+                        className="dark:bg-dark-900"
+                      />
+                    </div>
 
-                <div>
-                  <Label>Topic:</Label>
-                  <Select
-                    options={type_ops}
-                    placeholder="Select Option"
-                    onChange={handleSelectChange}
-                    className="dark:bg-dark-900"
-                    disabled={!(query.loc == "states" || query.loc == "nats")}
-                  />
-                </div>
-              
-                <div>
-                  <Label htmlFor="input">Year:</Label>
-                  <Input type="text" id="year" onChange={handleInput}/>
-                </div>
+                    <div>
+                      <Label>Topic:</Label>
+                      <Select
+                        options={type_ops}
+                        placeholder="Select Option"
+                        onChange={handleSelectChange}
+                        className="dark:bg-dark-900"
+                        disabled={!(query.loc == "states" || query.loc == "nats")}
+                      />
+                    </div>
+                  
+                    <div>
+                      <Label htmlFor="input">Year:</Label>
+                      <Input type="text" id="year" onChange={handleInput}/>
+                    </div>
 
-              </div>
-              <Button size="md" variant="primary" onClick={handleSubmit}>
-                Submit Query
-              </Button>
-              {/* {response && <pre>{JSON.stringify(response, null, 2)}</pre>} */}
+                  </div>
+                  <Button size="md" variant="primary" onClick={handleSubmit}>
+                    Submit Query
+                  </Button>
 
-          </ComponentCard>
+                </ComponentCard>
+            </div>
+            <div className="space-y-6">
+                <ComponentCard title="Enter custom string:">
+                  <h5 className="mb-4 font-regular text-gray-800 text-theme-s dark:text-gray-400/90 sm:text-m">
+                    ex: 2023MS&SSTATES
+                    (2023 mu sequences & series at states)
+                  </h5>
+                  {/* <h5 className="mb-4 font-regular text-gray-800 text-theme-s dark:text-gray-400/90 sm:text-m">
+                    it is optional to include the (S) for solutions!
+                  </h5> */}
+                  <div>
+                    <Label htmlFor="input">Test Name:</Label>
+                    <Input type="text" id="custom" onChange={handleInput}/>
+                  </div>
+                  <Button size="md" variant="primary" onClick={handleSubmit}>
+                    Submit Query
+                  </Button>
+                </ComponentCard>
+            </div>
+          </div>
+
           <br></br>
 
           <ComponentCard title={response && Object.keys(response)[0]  || "PDF File"}>
               {/* add react pdf viewer here */}
               {/* https://github.com/wojtekmaj/react-pdf/blob/main/sample/next-pages/pages/Sample.tsx */}
               {response && (
-                <div style={{margin: "auto"}}>
+                <div style={{width:"80%", margin: "auto"}}>
                   <Document file={Object.values(response)[0]} onLoadSuccess={onDocumentLoadSuccess}>
                     {Array.from(new Array(numPages), (_el, index) => (
                       <Page 
@@ -251,7 +282,7 @@ export default function Lookup() {
                         pageNumber={index +  1}
                         renderTextLayer={false}
                         renderAnnotationLayer={false}
-                        scale={0.9}
+                        scale={1.3}
                       />
                     ))}
                   </Document>

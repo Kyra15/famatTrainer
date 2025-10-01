@@ -19,10 +19,6 @@ APP_SECRET = os.getenv("APP_SECRET")
 app = Flask(__name__)
 CORS(app)
 
-@app.route('/time')
-def get_time():
-    return jsonify(time=time.time())
-
 @app.route("/api/demo")
 def question():
     return {"Hello": "World"}
@@ -57,8 +53,11 @@ def queryDB(data):
                     "alg2": "a2",
                     "precalc": "pc",
                     "stats": "st",
-                    "calc": "c",
-                    "reg": "r"
+                    "calc": "m",
+                    "reg": "r",
+                    "theta": "t",
+                    "alpha": "a",
+                    "mu": "m"
                 }
     
     # map the divisions
@@ -69,8 +68,9 @@ def queryDB(data):
 
     print(mapped_data)
 
-
-    if mapped_data["loc"] == "sw" or mapped_data["loc"] == "r":
+    if mapped_data["custom"] != "{{all}}":
+        query = mapped_data["custom"].strip().upper()
+    elif mapped_data["loc"] == "sw" or mapped_data["loc"] == "r":
         # structure is {year}{div}{location}{month}(S)
         query = f"{mapped_data["year"]}{mapped_data["div"]}{mapped_data["loc"]}{mapped_data["month"]}".upper()
     else:
