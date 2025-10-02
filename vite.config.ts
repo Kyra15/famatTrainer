@@ -17,5 +17,5 @@ export default defineConfig({
   ],
   preview: {
     allowedHosts: ['famat-lookup.onrender.com']
-  }
+  },
 });

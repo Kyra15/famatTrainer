@@ -9,6 +9,7 @@ import Button from "../components/ui/button/Button";
 import { Document, Page, pdfjs } from 'react-pdf'
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 import "react-pdf/dist/Page/TextLayer.css";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   'pdfjs-dist/build/pdf.worker.min.mjs',
@@ -141,7 +142,7 @@ export default function Lookup() {
 
     const dataToSend = { message };
 
-    const res = await fetch("http://0.0.0.0:3001/api/submit", {
+    const res = await fetch(apiUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(dataToSend),
