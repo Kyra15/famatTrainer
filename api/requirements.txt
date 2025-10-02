@@ -1,0 +1,7 @@
+flask
+flask-cors
+dropbox
+pandas
+os
+dotenv
+gunicorn
