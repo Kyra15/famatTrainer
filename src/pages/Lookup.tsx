@@ -2,6 +2,7 @@ import PageBreadcrumb from "../components/common/PageBreadCrumb";
 import { useState } from "react";
 import PageMeta from "../components/common/PageMeta";
 import ComponentCard from "../components/common/ComponentCard";
+// import ResponsiveImage from "../components/ui/images/ResponsiveImage";
 import Label from "../components/form/Label.tsx";
 import Input from "../components/form/input/InputField";
 import Select from "../components/form/Select.tsx";
@@ -275,7 +276,7 @@ export default function Lookup() {
               {/* add react pdf viewer here */}
               {/* https://github.com/wojtekmaj/react-pdf/blob/main/sample/next-pages/pages/Sample.tsx */}
               {response && (
-                <div style={{width:"80%", margin: "auto"}}>
+                <div>
                   <Document file={Object.values(response)[0]} onLoadSuccess={onDocumentLoadSuccess}>
                     {Array.from(new Array(numPages), (_el, index) => (
                       <Page 
@@ -286,8 +287,7 @@ export default function Lookup() {
                         scale={1.3}
                       />
                     ))}
-                  </Document>
-                  
+                  </Document> 
                 </div>
               )}
           </ComponentCard>
