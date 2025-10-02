@@ -17,7 +17,7 @@ APP_KEY = os.getenv("APP_KEY")
 APP_SECRET = os.getenv("APP_SECRET")
 
 app = Flask(__name__)
-CORS(app, resources={r"/api/*": {"origins": "https://famat-lookup.onrender.com"}})
+CORS(app)
 
 @app.route("/api/demo")
 def question():
